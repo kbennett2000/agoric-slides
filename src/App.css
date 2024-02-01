@@ -3,7 +3,7 @@
 @import 'tailwindcss/utilities';
 
 .App {
-  text-align: center;
+  text-align: left;
 }
 
 .App-logo {
@@ -40,3 +40,27 @@
     transform: rotate(360deg);
   }
 }
+
+.special-content {
+  background-color: #f0f0f0; /* Light grey background */
+  border: 1px solid #ddd; /* Grey border */
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+
+/* index.css or your global stylesheet */
+.slide-content a {
+  color: blue; /* Tailwind blue color */
+  text-decoration: underline;
+}
+
+.slide-content ul {
+  list-style-type: disc; /* Default list style */
+  margin-left: 20px; /* Ensure bullets are indented */
+}
+
+.slide-content li {
+  margin-bottom: 5px; /* Space out list items */
+}
+
