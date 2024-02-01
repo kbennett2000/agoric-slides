@@ -9,10 +9,10 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
     const [slides, setSlides] = useState([]);
     // useState hook to track the current slide index, initially 0.
     const [currentSlide, setCurrentSlide] = useState(0);
-
+    // The full URL with everything after the last '/' removed.
     const baseUrl = trimUrlToBase(markdownUrl);
 
-    // useEffect hook to perform side effects, in this case, to fetch and process the Markdown content.
+    // useEffect hook to fetch and process the Markdown content.
     useEffect(() => {
         // Configure the marked library with options for parsing the Markdown.
         marked.setOptions({
