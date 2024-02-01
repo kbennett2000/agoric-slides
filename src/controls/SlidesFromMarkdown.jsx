@@ -70,13 +70,13 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
         setCurrentSlide(current => (current - 1 + slides.length) % slides.length);
     };
 
+    // Function to remove everything after the last '/' in a supplied URL
     function trimUrlToBase(url) {
         // Find the last occurrence of "/"
-        const lastIndex = url.lastIndexOf("/");
-        
+        const lastIndex = url.lastIndexOf("/");        
         // Extract the substring from the beginning of the string to the position just before the last "/"
         const baseUrl = url.substring(0, lastIndex + 1);
-        
+        // Return the result
         return baseUrl;
     }
 
@@ -93,18 +93,8 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                     </h2>
                     <div className="slide-content mb-6 overflow-auto" style={{ maxHeight: '600px', minHeight: '600px' }} dangerouslySetInnerHTML={{ __html: slides[currentSlide].content }} />
                     <div className="slide-controls flex justify-between">
-                        <button 
-                            className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`} 
-                            onClick={goToPreviousSlide} 
-                            disabled={currentSlide === 0}>
-                            Previous
-                        </button>
-                        <button 
-                            className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === slides.length - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`} 
-                            onClick={goToNextSlide} 
-                            disabled={currentSlide === slides.length - 1}>
-                            Next
-                        </button>
+                        <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`} onClick={goToPreviousSlide} disabled={currentSlide === 0}>Previous</button>
+                        <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === slides.length - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`} onClick={goToNextSlide} disabled={currentSlide === slides.length - 1}>Next</button>
                     </div>
                 </div>
             ) : (
