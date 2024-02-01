@@ -58,11 +58,9 @@ const SlidesFromMarkdown = ({ markdownUrl, baseUrl }) => {
             {slides.length > 0 ? (
                 <div className="slide">
                     {/* Display the headline above the title if it exists */}
-                    {slides[currentSlide].headline && (
-                        <h1 className="slide-headline text-3xl font-bold mb-2">
-                            {slides[currentSlide].headline}
-                        </h1>
-                    )}
+                    <h1 className="slide-headline text-3xl font-bold mb-2">
+                        {slides[currentSlide].headline}
+                    </h1>
                     <h2 className="slide-title text-2xl font-semibold mb-">
                         {slides[currentSlide].title}
                     </h2>
