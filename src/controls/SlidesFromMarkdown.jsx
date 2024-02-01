@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { marked } from 'marked';
 
-const SlidesFromMarkdown = () => {
+// Modify the component to accept props
+const SlidesFromMarkdown = ({ markdownUrl, baseUrl }) => {
     const [slides, setSlides] = useState([]);
     const [currentSlide, setCurrentSlide] = useState(0);
-
-    const markdownUrl = 'https://raw.githubusercontent.com/Agoric/documentation/main/main/guides/getting-started/README.md';
-    const baseUrl = 'https://raw.githubusercontent.com/Agoric/documentation/main/main/guides/getting-started/';
 
     useEffect(() => {
         marked.setOptions({
@@ -24,10 +22,9 @@ const SlidesFromMarkdown = () => {
                 const updatedContent = response.data.replace(/]\(\.\//g, `](${baseUrl}`);
                 const sections = updatedContent.split('##').slice(1);
 
-                // Extract headline (content starting with "#")
-                const headlineMatch = updatedContent.match(/^#\s*(.*)/m);
-
                 setSlides(sections.map(section => {
+                    // Extract headline (content starting with "#")
+                    const headlineMatch = section.match(/^#\s*(.*)/m);
                     let headline = "";
                     if (headlineMatch) {
                         headline = headlineMatch[1];
@@ -36,16 +33,16 @@ const SlidesFromMarkdown = () => {
                     let htmlContent = marked(section.replace(/:::(.*?):::/gs, (match, p1) => {
                         return `<div class="special-content">${marked(p1.trim())}</div>`;
                     }).trim());
-                    htmlContent = htmlContent.replace(section.split('\n')[0].trim(), '');                    
+                    htmlContent = htmlContent.replace(/^#\s*(.*)/m, ''); // Remove the first occurrence of a line starting with '#'                    
                     return {
-                        headline: headline, // Add extracted headline to the slide object
+                        headline: headline,
                         title: section.split('\n')[0].trim().replace('#', ''),
                         content: htmlContent
                     };
                 }));
             })
             .catch(error => console.error(error));
-    }, []);
+    }, [markdownUrl, baseUrl]); // Add markdownUrl and baseUrl as dependencies
 
     const goToNextSlide = () => {
         setCurrentSlide(current => (current + 1) % slides.length);
@@ -59,13 +56,12 @@ const SlidesFromMarkdown = () => {
         <div className="container mx-auto px-4">
             {slides.length > 0 ? (
                 <div className="slide">
-                    {/* Display the headline above the title if it exists */}
                     {slides[currentSlide].headline && (
                         <h1 className="slide-headline text-3xl font-bold mb-2">
                             {slides[currentSlide].headline}
                         </h1>
                     )}
-                    <h2 className="slide-title text-2xl font-semibold mb-">
+                    <h2 className="slide-title text-2xl font-semibold mb-4">
                         {slides[currentSlide].title}
                     </h2>
                     <div className="slide-content mb-6 overflow-auto" style={{ maxHeight: '600px', minHeight: '600px' }} dangerouslySetInnerHTML={{ __html: slides[currentSlide].content }} />
