@@ -4,11 +4,13 @@ import axios from 'axios';
 import { marked } from 'marked';
 
 // Define a functional component named SlidesFromMarkdown that accepts markdownUrl and baseUrl as props.
-const SlidesFromMarkdown = ({ markdownUrl, baseUrl }) => {
+const SlidesFromMarkdown = ({ markdownUrl }) => {
     // useState hook to hold the array of slides, initially an empty array.
     const [slides, setSlides] = useState([]);
     // useState hook to track the current slide index, initially 0.
     const [currentSlide, setCurrentSlide] = useState(0);
+
+    const baseUrl = trimUrlToBase(markdownUrl);
 
     // useEffect hook to perform side effects, in this case, to fetch and process the Markdown content.
     useEffect(() => {
@@ -67,6 +69,16 @@ const SlidesFromMarkdown = ({ markdownUrl, baseUrl }) => {
     const goToPreviousSlide = () => {
         setCurrentSlide(current => (current - 1 + slides.length) % slides.length);
     };
+
+    function trimUrlToBase(url) {
+        // Find the last occurrence of "/"
+        const lastIndex = url.lastIndexOf("/");
+        
+        // Extract the substring from the beginning of the string to the position just before the last "/"
+        const baseUrl = url.substring(0, lastIndex + 1);
+        
+        return baseUrl;
+    }
 
     // Render the component UI.
     return (
