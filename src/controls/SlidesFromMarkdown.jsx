@@ -93,8 +93,18 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                     </h2>
                     <div className="slide-content mb-6 overflow-auto" style={{ maxHeight: '600px', minHeight: '600px' }} dangerouslySetInnerHTML={{ __html: slides[currentSlide].content }} />
                     <div className="slide-controls flex justify-between">
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={goToPreviousSlide}>Previous</button>
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={goToNextSlide}>Next</button>
+                        <button 
+                            className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`} 
+                            onClick={goToPreviousSlide} 
+                            disabled={currentSlide === 0}>
+                            Previous
+                        </button>
+                        <button 
+                            className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === slides.length - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`} 
+                            onClick={goToNextSlide} 
+                            disabled={currentSlide === slides.length - 1}>
+                            Next
+                        </button>
                     </div>
                 </div>
             ) : (
