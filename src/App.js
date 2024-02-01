@@ -1,6 +1,5 @@
-import logo from './logo.svg';
-import './App.css';
 import SlidesFromMarkdown from './controls/SlidesFromMarkdown';
+import './App.css';
 
 function App() {
   return (
