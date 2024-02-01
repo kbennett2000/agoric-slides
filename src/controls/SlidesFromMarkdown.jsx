@@ -23,13 +23,24 @@ const SlidesFromMarkdown = () => {
             .then(response => {
                 const updatedContent = response.data.replace(/]\(\.\//g, `](${baseUrl}`);
                 const sections = updatedContent.split('##').slice(1);
+
+                // Extract headline (content starting with "#")
+                const headlineMatch = updatedContent.match(/^#\s*(.*)/m);
+
                 setSlides(sections.map(section => {
-                    const htmlContent = marked(section.replace(/:::(.*?):::/gs, (match, p1) => {
+                    let headline = "";
+                    if (headlineMatch) {
+                        headline = headlineMatch[1];
+                        section = section.replace(headlineMatch[0], ''); // Remove headline from the section content
+                    }
+                    let htmlContent = marked(section.replace(/:::(.*?):::/gs, (match, p1) => {
                         return `<div class="special-content">${marked(p1.trim())}</div>`;
                     }).trim());
+                    htmlContent = htmlContent.replace(section.split('\n')[0].trim(), '');                    
                     return {
-                        title: section.split('\n')[0].trim(),
-                        content: htmlContent.replace(section.split('\n')[0].trim(), '')
+                        headline: headline, // Add extracted headline to the slide object
+                        title: section.split('\n')[0].trim().replace('#', ''),
+                        content: htmlContent
                     };
                 }));
             })
@@ -48,11 +59,16 @@ const SlidesFromMarkdown = () => {
         <div className="container mx-auto px-4">
             {slides.length > 0 ? (
                 <div className="slide">
-                    <h2 className="slide-title text-2xl font-bold mb-4">
+                    {/* Display the headline above the title if it exists */}
+                    {slides[currentSlide].headline && (
+                        <h1 className="slide-headline text-3xl font-bold mb-2">
+                            {slides[currentSlide].headline}
+                        </h1>
+                    )}
+                    <h2 className="slide-title text-2xl font-semibold mb-">
                         {slides[currentSlide].title}
                     </h2>
-                    {/* Apply inline styles for fixed size and overflow handling */}
-                    <div className="slide-content mb-6 overflow-auto" style={{ maxHeight: '350px', minHeight: '350px' }} dangerouslySetInnerHTML={{ __html: slides[currentSlide].content }} />
+                    <div className="slide-content mb-6 overflow-auto" style={{ maxHeight: '600px', minHeight: '600px' }} dangerouslySetInnerHTML={{ __html: slides[currentSlide].content }} />
                     <div className="slide-controls flex justify-between">
                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={goToPreviousSlide}>Previous</button>
                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={goToNextSlide}>Next</button>

@@ -64,3 +64,15 @@
   margin-bottom: 5px; /* Space out list items */
 }
 
+pre {
+  background-color: black; /* Sets the background color of <pre> elements to brown */
+  color: green; /* Optional: Changes the text color to white for better readability */
+  font-weight: bold;
+  padding: 10px; /* Optional: Adds some padding inside the <pre> elements */
+  border-radius: 5px; /* Optional: Rounds the corners of the <pre> elements */
+  overflow-x: auto; /* Optional: Adds a horizontal scrollbar if the content overflows */
+}
+
+code {
+  font-weight: bold;
+}

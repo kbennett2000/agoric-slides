@@ -1,4 +1,3 @@
-//import PageFrame from './pages/PageFrame'
 import SlidesFromMarkdown from './controls/SlidesFromMarkdown';
 import './App.css';
 
