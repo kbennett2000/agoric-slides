@@ -22,9 +22,10 @@ const SlidesFromMarkdown = ({ markdownUrl, baseUrl }) => {
                 const updatedContent = response.data.replace(/]\(\.\//g, `](${baseUrl}`);
                 const sections = updatedContent.split('##').slice(1);
 
+                // Extract headline (content starting with "#")
+                const headlineMatch = updatedContent.match(/^#\s*(.*)/m);
+
                 setSlides(sections.map(section => {
-                    // Extract headline (content starting with "#")
-                    const headlineMatch = section.match(/^#\s*(.*)/m);
                     let headline = "";
                     if (headlineMatch) {
                         headline = headlineMatch[1];
@@ -33,16 +34,16 @@ const SlidesFromMarkdown = ({ markdownUrl, baseUrl }) => {
                     let htmlContent = marked(section.replace(/:::(.*?):::/gs, (match, p1) => {
                         return `<div class="special-content">${marked(p1.trim())}</div>`;
                     }).trim());
-                    htmlContent = htmlContent.replace(/^#\s*(.*)/m, ''); // Remove the first occurrence of a line starting with '#'                    
+                    htmlContent = htmlContent.replace(section.split('\n')[0].trim(), '');                    
                     return {
-                        headline: headline,
+                        headline: headline, // Add extracted headline to the slide object
                         title: section.split('\n')[0].trim().replace('#', ''),
                         content: htmlContent
                     };
                 }));
             })
             .catch(error => console.error(error));
-    }, [markdownUrl, baseUrl]); // Add markdownUrl and baseUrl as dependencies
+    }, []);
 
     const goToNextSlide = () => {
         setCurrentSlide(current => (current + 1) % slides.length);
@@ -56,12 +57,13 @@ const SlidesFromMarkdown = ({ markdownUrl, baseUrl }) => {
         <div className="container mx-auto px-4">
             {slides.length > 0 ? (
                 <div className="slide">
+                    {/* Display the headline above the title if it exists */}
                     {slides[currentSlide].headline && (
                         <h1 className="slide-headline text-3xl font-bold mb-2">
                             {slides[currentSlide].headline}
                         </h1>
                     )}
-                    <h2 className="slide-title text-2xl font-semibold mb-4">
+                    <h2 className="slide-title text-2xl font-semibold mb-">
                         {slides[currentSlide].title}
                     </h2>
                     <div className="slide-content mb-6 overflow-auto" style={{ maxHeight: '600px', minHeight: '600px' }} dangerouslySetInnerHTML={{ __html: slides[currentSlide].content }} />
