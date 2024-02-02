@@ -39,14 +39,17 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                         // Replace custom ":::" blocks with a div that has a "special-content" class.
                         return `<div class="special-content">${marked(p1.trim())}</div>`;
                     }).trim());
-
                     // Remove the first occurrence of any line starting with '#' in the HTML content.
                     htmlContent = htmlContent.replace(/^#\s*(.*)/m, '');
                     // Extract the slide title, remove any "#"
                     const slideTitle = section.split('\n')[0].trim().replace('#', '');
                     // Remove the slide title from the slide body text
                     htmlContent = htmlContent.replace(slideTitle, '');
-
+                    // Remove any empty tags from the HTML content
+                    htmlContent = removeEmptyTags(htmlContent);
+                    // Remove any breaks in the HTML
+                    htmlContent = htmlContent.replace('<br>', '');
+                    // Return the slide object
                     return {
                         headline: headline, // Include the extracted headline in the slide object.
                         title: slideTitle, // Set the slide title, removing any leading '#'.
@@ -77,28 +80,51 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
         return baseUrl;
     }
 
+    function removeEmptyTags(htmlString) {
+        // Regular expression to match empty tags. This pattern matches an opening tag,
+        // followed by optional spaces or line breaks, followed by a closing tag of the same type.
+        // The \s* inside the tag matches any spaces that might be present in the tag itself (e.g., attributes).
+        // The (?:<\/\1>) part ensures that the closing tag matches the opening tag.
+        const emptyTagPattern = /<(\w+)\s*><\/\1>/g;
+      
+        // Use the replace function to remove all instances of empty tags from the HTML string.
+        // The function will replace each empty tag found with an empty string, effectively removing it.
+        let cleanedHtml = htmlString;
+        let previousHtml = "";
+        // Continue replacing until no more replacements are made, to catch nested empty tags
+        while (previousHtml !== cleanedHtml) {
+          previousHtml = cleanedHtml;
+          cleanedHtml = cleanedHtml.replace(emptyTagPattern, '');
+        }
+      
+        return cleanedHtml;
+    }
+
     // Render the component UI.
     return (
         <div className="container mx-auto px-4">
-            {slides.length > 0 ? ( 
-                <div className="slide">
-                    <h1 className="slide-headline text-3xl font-bold mb-2">
-                        {slides[currentSlide].headline}
-                    </h1>
-                    <h2 className="slide-title text-2xl font-semibold mb-4">
-                        {slides[currentSlide].title}
-                    </h2>
-                    <div className="slide-content mb-6 overflow-auto" style={{ maxHeight: '600px', minHeight: '600px' }} dangerouslySetInnerHTML={{ __html: slides[currentSlide].content }} />
-                    <div className="slide-controls flex justify-between">
-                        <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`} onClick={goToPreviousSlide} disabled={currentSlide === 0}>Previous</button>
-                        <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === slides.length - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`} onClick={goToNextSlide} disabled={currentSlide === slides.length - 1}>Next</button>
-                    </div>
-                </div>
-            ) : (
-                <p>Loading slides...</p> 
-            )}
+          {slides.length > 0 ? (
+            <div className="slide">
+              <h1 className="slide-headline text-3xl font-bold mb-2">
+                {slides[currentSlide].headline}
+              </h1>
+              {/* Conditionally render the h2 element only if headline and title are different */}
+              {slides[currentSlide].title && (
+                <h2 className="slide-title text-2xl font-semibold mb-4">
+                  {slides[currentSlide].title}
+                </h2>
+              )}
+              <div className="slide-content mb-6 overflow-auto" style={{ maxHeight: '600px', minHeight: '600px' }} dangerouslySetInnerHTML={{ __html: slides[currentSlide].content }} />
+              <div className="slide-controls flex justify-between">
+                <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`} onClick={goToPreviousSlide} disabled={currentSlide === 0}>Previous</button>
+                <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === slides.length - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`} onClick={goToNextSlide} disabled={currentSlide === slides.length - 1}>Next</button>
+              </div>
+            </div>
+          ) : (
+            <p>Loading slides...</p>
+          )}
         </div>
-    );
+      );      
 };
 
 // Export the component for use in other parts of the application.
