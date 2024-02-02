@@ -30,9 +30,16 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                 // Replace relative links in the fetched Markdown content with the absolute baseUrl.
                 const updatedContent = response.data.replace(/]\(\.\//g, `](${baseUrl}`);
                 // Split the updated content into sections based on "##" to separate slides.
-                const sections = updatedContent.split('##').slice(1);
-                    // Attempt to match and extract the headline from the section.
-                    const headlineMatch = updatedContent.match(/^#\s*(.*)/m);
+                
+
+
+
+                //const sections = updatedContent.split('##').slice(1);
+                const sections = updatedContent.split(/(?<=\n)## (?!#)/).map(section => section.trim()).filter(section => section);
+
+
+                // Attempt to match and extract the headline from the section.
+                const headlineMatch = updatedContent.match(/^#\s*(.*)/m);
 
                 // Map each section to a slide object after processing.
                 setSlides(sections.map(section => {
