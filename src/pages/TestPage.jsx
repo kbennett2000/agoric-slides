@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SlidesFromMarkdown from "../controls/SlidesFromMarkdown";
 import "../App.css";
 import logo from "../assets/logo.svg";
+import banner from "../assets/banner.png";
 
 const TestPage = () => {
   const [activeTab, setActiveTab] = useState(1);
@@ -12,8 +13,13 @@ const TestPage = () => {
 
   return (
     <div className="container mx-auto mt-8">
-      <div className="logo-container mb-4 flex justify-left">
+      <div className="container mb-4 flex justify-between items-center">
         <img src={logo} alt="Logo" />
+        { /* 
+        <div className="flex-1 text-center">
+          <img src={banner} alt="Banner" className="mx-auto w-[400px]" />
+        </div>
+        */}
       </div>
 
       <div className="flex bg-gray-200" style={{ borderRadius: '8px' }}>
