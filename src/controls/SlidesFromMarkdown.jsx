@@ -33,7 +33,6 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                     let headline = "";
                     if (headlineMatch) {
                         headline = headlineMatch[1]; // Assign the matched headline text.
-                        console.log("headline is " + headline);
                     }
                     // Process the section content with marked to convert Markdown to HTML.
                     let htmlContent = marked(section.replace(/:::(.*?):::/gs, (match, p1) => {
