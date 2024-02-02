@@ -39,10 +39,13 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                         // Replace custom ":::" blocks with a div that has a "special-content" class.
                         return `<div class="special-content">${marked(p1.trim())}</div>`;
                     }).trim());
-                    // Remove the first occurrence of any line starting with '#' in the HTML content.
-                    htmlContent = htmlContent.replace(/^#\s*(.*)/m, '');
+                    
                     // Extract the slide title, remove any "#"
                     const slideTitle = section.split('\n')[0].trim().replace('#', '');
+                    
+                    // *** HTML CLEAN-UP
+                    // Remove the first occurrence of any line starting with '#' in the HTML content.
+                    htmlContent = htmlContent.replace(/^#\s*(.*)/m, '');
                     // Remove the slide title from the slide body text
                     htmlContent = htmlContent.replace(slideTitle, '');
                     // Remove any empty tags from the HTML content
@@ -50,7 +53,8 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                     // Remove any breaks in the HTML
                     htmlContent = htmlContent.replace('<br>', '');
                     // Add slide-image class to img elements
-                    htmlContent = addClassToImages(htmlContent);
+                    htmlContent = addClassToImages(htmlContent, 'slide-image');
+                    
                     // Return the slide object
                     return {
                         headline: headline, // Include the extracted headline in the slide object.
@@ -82,6 +86,8 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
         return baseUrl;
     }
 
+    // Remove any empty tags from the input HTML
+    // Example: Tags like <p></p> will be removed
     function removeEmptyTags(htmlString) {
         // Regular expression to match empty tags. This pattern matches an opening tag,
         // followed by optional spaces or line breaks, followed by a closing tag of the same type.
@@ -102,7 +108,8 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
         return cleanedHtml;
     }
 
-    function addClassToImages(htmlString) {
+    // Add the supplied class name to all img elements in the supplied HTML
+    function addClassToImages(htmlString, className) {
         // Create a new DOMParser instance
         const parser = new DOMParser();
         
@@ -113,7 +120,7 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
         const images = doc.querySelectorAll('img');
         
         // Add the "slide-image" class to each <img> element
-        images.forEach(img => img.classList.add('slide-image'));
+        images.forEach(img => img.classList.add(className));
         
         // Serialize the document object back to an HTML string
         const serializer = new XMLSerializer();
@@ -131,7 +138,6 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
               <h1 className="slide-headline text-3xl font-bold mb-2">
                 {slides[currentSlide].headline}
               </h1>
-              {/* Conditionally render the h2 element only if headline and title are different */}
               {slides[currentSlide].title && (
                 <h2 className="slide-title text-2xl font-semibold mb-4">
                   {slides[currentSlide].title}
