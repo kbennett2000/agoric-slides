@@ -33,20 +33,24 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                     let headline = "";
                     if (headlineMatch) {
                         headline = headlineMatch[1]; // Assign the matched headline text.
+                        console.log("headline is " + headline);
                     }
                     // Process the section content with marked to convert Markdown to HTML.
                     let htmlContent = marked(section.replace(/:::(.*?):::/gs, (match, p1) => {
                         // Replace custom ":::" blocks with a div that has a "special-content" class.
                         return `<div class="special-content">${marked(p1.trim())}</div>`;
                     }).trim());
+
                     // Remove the first occurrence of any line starting with '#' in the HTML content.
-                    htmlContent = htmlContent.replace(/^#\s*(.*)/m, '');                    
+                    htmlContent = htmlContent.replace(/^#\s*(.*)/m, '');
+                    // Extract the slide title, remove any "#"
                     const slideTitle = section.split('\n')[0].trim().replace('#', '');
-                    htmlContent = htmlContent.replace(slideTitle, '');       
+                    // Remove the slide title from the slide body text
+                    htmlContent = htmlContent.replace(slideTitle, '');
 
                     return {
                         headline: headline, // Include the extracted headline in the slide object.
-                        title: section.split('\n')[0].trim().replace('#', ''), // Set the slide title, removing any leading '#'.
+                        title: slideTitle, // Set the slide title, removing any leading '#'.
                         content: htmlContent // Include the processed HTML content in the slide object.
                     };
                 }));
