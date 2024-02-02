@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SlidesFromMarkdown from "../controls/SlidesFromMarkdown";
 import "../App.css";
 import logo from "../assets/logo.svg";
-import banner from "../assets/banner.png";
+//import banner from "../assets/banner.png";
 
 const TestPage = () => {
   const [activeTab, setActiveTab] = useState(1);
