@@ -49,6 +49,8 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                     htmlContent = removeEmptyTags(htmlContent);
                     // Remove any breaks in the HTML
                     htmlContent = htmlContent.replace('<br>', '');
+                    // Add slide-image class to img elements
+                    htmlContent = addClassToImages(htmlContent);
                     // Return the slide object
                     return {
                         headline: headline, // Include the extracted headline in the slide object.
@@ -99,6 +101,27 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
       
         return cleanedHtml;
     }
+
+    function addClassToImages(htmlString) {
+        // Create a new DOMParser instance
+        const parser = new DOMParser();
+        
+        // Parse the HTML string into a document object
+        const doc = parser.parseFromString(htmlString, 'text/html');
+        
+        // Query all <img> elements in the document
+        const images = doc.querySelectorAll('img');
+        
+        // Add the "slide-image" class to each <img> element
+        images.forEach(img => img.classList.add('slide-image'));
+        
+        // Serialize the document object back to an HTML string
+        const serializer = new XMLSerializer();
+        const modifiedHtmlString = serializer.serializeToString(doc);
+        
+        // Return the modified HTML string
+        return modifiedHtmlString;
+      }
 
     // Render the component UI.
     return (
