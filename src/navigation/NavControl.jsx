@@ -36,10 +36,10 @@ const {
 } = config;
 
 const NavControl = () => {
-  const [sideNavContent, setSideNavContent] = useState([]);
-  const [markdownUrl, setMarkdownUrl] = useState("");
-  const [sideNavSelectedItem, setSideNavSelectedItem] = useState(null); // State to track selected item in SideBar
-  const [activeSelection, setActiveSelection] = useState("");
+  const [sideNavContent, setSideNavContent] = useState(["Introduction to Agoric", "What's New in Agoric"]);
+  const [markdownUrl, setMarkdownUrl] = useState(Page_Introduction_to_Agoric);
+  const [sideNavSelectedItem, setSideNavSelectedItem] = useState("Introduction to Agoric");
+  const [activeSelection, setActiveSelection] = useState("Home");
 
   const handleTopNavSelection = (selection) => {
     setActiveSelection(selection);
