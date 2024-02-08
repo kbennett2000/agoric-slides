@@ -41,7 +41,7 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                     }).trim());
                     
                     // Extract the slide title, remove any "#"
-                    const slideTitle = section.split('\n')[0].trim().replace('#', '');
+                    let slideTitle = section.split('\n')[0].trim().replace('#', '');
                     
                     // *** HTML CLEAN-UP
                     // Remove the first occurrence of any line starting with '#' in the HTML content.
@@ -55,6 +55,14 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                     // Add slide-image class to img elements
                     htmlContent = addClassToImages(htmlContent, 'slide-image');
                     
+                    // If the headline and slide title are the same, no need to display the title
+                    if (headline.trim() === slideTitle.trim()) {
+                      slideTitle = '';
+                    }                    
+
+                    // Remove the headline from the slide content if it appears.
+                    htmlContent = htmlContent.replace(`<h1>${headline}</h1>`, '');
+
                     // Return the slide object
                     return {
                         headline: headline, // Include the extracted headline in the slide object.
@@ -104,7 +112,7 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
           previousHtml = cleanedHtml;
           cleanedHtml = cleanedHtml.replace(emptyTagPattern, '');
         }
-      
+        // Return the cleaned HTML
         return cleanedHtml;
     }
 
