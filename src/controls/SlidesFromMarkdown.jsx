@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { marked } from "marked";
+import DOMPurify from 'dompurify';
+import parse from 'html-react-parser';
 
 const SlidesFromMarkdown = ({ markdownUrl }) => {
   const [slides, setSlides] = useState([]);
@@ -50,7 +52,7 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                 })
                 .trim()
             );
-
+            
             // Extract the slide title, remove any "#"
             let slideTitle = section.split("\n")[0].trim().replace("#", "");
 
@@ -74,11 +76,14 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
             // Remove the headline from the slide content if it appears.
             htmlContent = htmlContent.replace(`<h1>${headline}</h1>`, "");
 
+            // Sanitize the HTML
+            const sanitizedHtml = DOMPurify.sanitize(htmlContent);
+
             // Return the slide object
             return {
               headline: headline, // Include the extracted headline in the slide object.
               title: slideTitle, // Set the slide title, removing any leading '#'.
-              content: htmlContent, // Include the processed HTML content in the slide object.
+              content: sanitizedHtml, // Include the processed HTML content in the slide object.
             };
           })
         );
@@ -164,10 +169,10 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
   return (
     <div className="container mx-auto px-4">
       {slides.length > 0 ? (
-        <div className="slide">
+        <div className="slide" >
           <h1 className="slide-headline text-3xl font-bold mb-2">{slides[currentSlide].headline}</h1>
           {slides[currentSlide].title && <h2 className="slide-title text-2xl font-semibold mb-4">{slides[currentSlide].title}</h2>}
-          <div className="slide-content mb-6 overflow-auto" style={{ maxHeight: "600px", minHeight: "600px" }} dangerouslySetInnerHTML={{ __html: slides[currentSlide].content }} />
+          <div className="slide-content mb-6 overflow-auto" style={{ maxHeight: "600px", minHeight: "600px" }} >{parse(slides[currentSlide].content)}</div>
           <div className="slide-controls flex justify-between">
             <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`} onClick={goToPreviousSlide} disabled={currentSlide === 0}>
               Previous

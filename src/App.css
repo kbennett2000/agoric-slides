@@ -113,8 +113,8 @@ iframe {
 
 /* Ensuring slide container has a consistent width */
 .slide {
-  width: 100%; /* Use 100% of its parent container width */
-  max-width: 800px; /* Example fixed max-width for larger screens */
+  width: 70%; /* Use 100% of its parent container width */
+  /*max-width: 2000px; /* Example fixed max-width for larger screens */
   margin: auto; /* Center the slide */
   overflow: hidden; /* Hide overflow */
 }
