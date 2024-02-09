@@ -165,6 +165,18 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
     return <div>Loading slides...</div>;
   }
 
+  // Calculate titles for the Previous and Next slides
+  const getAdjacentSlideTitles = (currentIndex, slides) => {
+    let prevTitle = currentIndex > 0 ? slides[currentIndex - 1].title : '';
+    if (!prevTitle) {
+      prevTitle = currentIndex > 0 ? slides[currentIndex - 1].headline : '';
+    }
+    let nextTitle = currentIndex < slides.length - 1 ? slides[currentIndex + 1].title : '';
+    return { prevTitle, nextTitle };
+  };
+
+  const { prevTitle, nextTitle } = getAdjacentSlideTitles(currentSlide, slides);
+
   // Render the component UI.
   return (
     <div className="container mx-auto px-4">
@@ -175,10 +187,10 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
           <div className="slide-content mb-6 overflow-auto" style={{ maxHeight: "600px", minHeight: "600px" }} >{parse(slides[currentSlide].content)}</div>
           <div className="slide-controls flex justify-between">
             <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`} onClick={goToPreviousSlide} disabled={currentSlide === 0}>
-              Previous
+            {prevTitle ? `Previous: ${prevTitle}` : 'Previous'}
             </button>
             <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === slides.length - 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`} onClick={goToNextSlide} disabled={currentSlide === slides.length - 1}>
-              Next
+            {nextTitle ? `Next: ${nextTitle}` : 'Next'}
             </button>
           </div>
         </div>
