@@ -7,6 +7,8 @@ import parse from "html-react-parser";
 const SlidesFromMarkdown = ({ markdownUrl }) => {
   const [slides, setSlides] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [fade, setFade] = useState(true);
+
   // The full URL with everything after the last '/' removed.
   const baseUrl = trimUrlToBase(markdownUrl);
 
@@ -103,14 +105,28 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
       .catch((error) => console.error(error)); // Log any errors that occur during fetching or processing.
   }, [markdownUrl, baseUrl]); // Re-run this effect if markdownUrl or baseUrl props change.
 
+  const changeSlide = (newSlide) => {
+    // Start with fade-out
+    setFade(false);
+
+    // Use timeout to allow fade-out effect to be visible
+    setTimeout(() => {
+      setCurrentSlide(newSlide);
+      // After changing slide, start fade-in
+      setFade(true);
+    }, 200); // This duration should match the CSS transition duration
+  };
+
   // Advance to the next slide by incrementing the currentSlide index.
   const goToNextSlide = () => {
-    setCurrentSlide((current) => (current + 1) % slides.length);
+    // setCurrentSlide((current) => (current + 1) % slides.length);
+    changeSlide((current) => (current + 1) % slides.length);
   };
 
   // Go back to the previous slide by decrementing the currentSlide index.
   const goToPreviousSlide = () => {
-    setCurrentSlide((current) => (current - 1 + slides.length) % slides.length);
+    // setCurrentSlide((current) => (current - 1 + slides.length) % slides.length);
+    changeSlide((current) => (current - 1 + slides.length) % slides.length);
   };
 
   // Remove everything after the last '/' in a supplied URL
@@ -192,10 +208,10 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
   return (
     <div className="w-11/12 md:w-4/5 lg:w-3/4 xl:w-3/4 2xl:w-3/4 mx-auto container px-4">
       {slides.length > 0 ? (
-        <div className="slide">
+        <div className={`slide ${fade ? "opacity-100" : "opacity-0"} transition-opacity duration-200`}>
           <h1 className="slide-headline text-3xl font-bold mb-2">{slides[currentSlide].headline}</h1>
           {slides[currentSlide].title && <h2 className="slide-title text-2xl font-semibold mb-4">{slides[currentSlide].title}</h2>}
-          <div className="slide-content mb-6 overflow-auto" style={{ height: '50vh', width: '75vw', maxHeight: "600px", minHeight: "600px" }}>
+          <div className="slide-content mb-6 overflow-auto" style={{ height: "50vh", width: "75vw", maxHeight: "600px", minHeight: "600px" }}>
             {parse(slides[currentSlide].content)}
           </div>
           <div className="slide-controls flex justify-between">
@@ -231,7 +247,7 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
     </div>
   );
 
-
+  
 };
 
 // Export the component for use in other parts of the application.
