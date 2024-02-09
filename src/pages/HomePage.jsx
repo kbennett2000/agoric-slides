@@ -9,13 +9,20 @@ const TestPage = () => {
     setActiveTab(tabNumber);
   };
 
+
+
   return (
-    <div className="container mx-auto mt-8">
-      <div className="container mb-4 flex justify-left items-center">
+    <div className="mx-auto mt-8">
+      <div className="mb-4 flex justify-left items-center">
         <NavControl />
       </div>
     </div>
   );
+
+
+
+
+
 };
 
 export default TestPage;

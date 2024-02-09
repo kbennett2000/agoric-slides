@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { marked } from "marked";
-import DOMPurify from 'dompurify';
-import parse from 'html-react-parser';
+import DOMPurify from "dompurify";
+import parse from "html-react-parser";
 
 const SlidesFromMarkdown = ({ markdownUrl }) => {
   const [slides, setSlides] = useState([]);
@@ -52,7 +52,7 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                 })
                 .trim()
             );
-            
+
             // Extract the slide title, remove any "#"
             let slideTitle = section.split("\n")[0].trim().replace("#", "");
 
@@ -76,8 +76,20 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
             // Remove the headline from the slide content if it appears.
             htmlContent = htmlContent.replace(`<h1>${headline}</h1>`, "");
 
+            // Allow iFrames to pass sanitization
+            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
+              if (data.tagName === "iframe") {
+                // Check if the iframe's src attribute is from a trusted source
+                const src = node.getAttribute("src") || "";
+                if (src.startsWith("https://www.youtube.com/") || src.startsWith("https://player.vimeo.com/")) {
+                  // Keep the iframe if it's from a trusted source
+                  data.keepElement = true;
+                }
+              }
+            });
+
             // Sanitize the HTML
-            const sanitizedHtml = DOMPurify.sanitize(htmlContent);
+            const sanitizedHtml = DOMPurify.sanitize(htmlContent, { ADD_TAGS: ["iframe"], ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"] });
 
             // Return the slide object
             return {
@@ -161,36 +173,55 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
   }
 
   // Before rendering the component, check if slides[currentSlide] is defined
-  if (!slides.length || typeof slides[currentSlide] === 'undefined') {
+  if (!slides.length || typeof slides[currentSlide] === "undefined") {
     return <div>Loading slides...</div>;
   }
 
   // Calculate titles for the Previous and Next slides
   const getAdjacentSlideTitles = (currentIndex, slides) => {
-    let prevTitle = currentIndex > 0 ? slides[currentIndex - 1].title : '';
+    let prevTitle = currentIndex > 0 ? slides[currentIndex - 1].title : "";
     if (!prevTitle) {
-      prevTitle = currentIndex > 0 ? slides[currentIndex - 1].headline : '';
+      prevTitle = currentIndex > 0 ? slides[currentIndex - 1].headline : "";
     }
-    let nextTitle = currentIndex < slides.length - 1 ? slides[currentIndex + 1].title : '';
+    let nextTitle = currentIndex < slides.length - 1 ? slides[currentIndex + 1].title : "";
     return { prevTitle, nextTitle };
   };
 
   const { prevTitle, nextTitle } = getAdjacentSlideTitles(currentSlide, slides);
 
-  // Render the component UI.
   return (
-    <div className="container mx-auto px-4">
+    <div className="w-11/12 md:w-4/5 lg:w-3/4 xl:w-3/4 2xl:w-3/4 mx-auto container px-4">
       {slides.length > 0 ? (
-        <div className="slide" >
+        <div className="slide">
           <h1 className="slide-headline text-3xl font-bold mb-2">{slides[currentSlide].headline}</h1>
           {slides[currentSlide].title && <h2 className="slide-title text-2xl font-semibold mb-4">{slides[currentSlide].title}</h2>}
-          <div className="slide-content mb-6 overflow-auto" style={{ maxHeight: "600px", minHeight: "600px" }} >{parse(slides[currentSlide].content)}</div>
+          <div className="slide-content mb-6 overflow-auto" style={{ height: '50vh', width: '75vw', maxHeight: "600px", minHeight: "600px" }}>
+            {parse(slides[currentSlide].content)}
+          </div>
           <div className="slide-controls flex justify-between">
-            <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`} onClick={goToPreviousSlide} disabled={currentSlide === 0}>
-            {prevTitle ? `Previous: ${prevTitle}` : 'Previous'}
+            <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out ${currentSlide === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`} onClick={goToPreviousSlide} disabled={currentSlide === 0}>
+              {prevTitle ? (
+                <div className="flex flex-col items-start">
+                  <span>Previous:</span>
+                  <span>{prevTitle}</span>
+                </div>
+              ) : (
+                "Previous"
+              )}
             </button>
-            <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded ${currentSlide === slides.length - 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`} onClick={goToNextSlide} disabled={currentSlide === slides.length - 1}>
-            {nextTitle ? `Next: ${nextTitle}` : 'Next'}
+            <button
+              className={`bg-blue-500 text-white font-bold py-2 px-4 rounded shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out ${currentSlide === slides.length - 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`}
+              onClick={goToNextSlide}
+              disabled={currentSlide === slides.length - 1}
+            >
+              {nextTitle ? (
+                <div className="flex flex-col items-start">
+                  <span>Next:</span>
+                  <span>{nextTitle}</span>
+                </div>
+              ) : (
+                "Next"
+              )}
             </button>
           </div>
         </div>
@@ -199,6 +230,7 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
       )}
     </div>
   );
+
 
 };
 

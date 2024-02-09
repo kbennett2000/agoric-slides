@@ -11,7 +11,7 @@ function NavBar({ onSelectionChange, activeSelection }) {
     <>
       <Navbar bg="light" expand="lg" className="bg-white">
         <img src={logo} alt="Logo" width="150" />
-        <Navbar.Brand href="#home">&nbsp;&nbsp;Docs</Navbar.Brand>
+        <Navbar.Brand href="#home" />
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">

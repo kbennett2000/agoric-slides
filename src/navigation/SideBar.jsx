@@ -3,7 +3,7 @@ import { Navbar } from "react-bootstrap"; // Assuming Nav.Link is no longer used
 
 const SideBar = ({ content, onItemClick, selectedItem }) => {
   return (
-    <Navbar bg="light" expand="lg" className="flex-column h-screen">
+    <Navbar bg="light" expand="lg" className="flex-col h-screen">
       <Navbar.Brand href="#home"></Navbar.Brand>
       <div className="flex flex-col">
         {content.map((item, index) => (

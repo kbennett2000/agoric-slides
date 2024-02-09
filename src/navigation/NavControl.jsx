@@ -252,10 +252,11 @@ const NavControl = () => {
     console.log("SideBar selection - " + item);
   };
 
+  
   return (
     <div className="flex flex-col h-screen">
       <NavBar onSelectionChange={handleTopNavSelection} activeSelection={activeSelection} />
-      <div className="flex flex-grow overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-grow overflow-hidden">
         <SideBar content={sideNavContent} onItemClick={handleItemClick} selectedItem={sideNavSelectedItem} className="w-64 flex-none overflow-y-auto" />
         <div className="flex-grow p-4 overflow-y-auto">
           <SlidesFromMarkdown markdownUrl={markdownUrl} />
@@ -263,6 +264,12 @@ const NavControl = () => {
       </div>
     </div>
   );
+  
+  
+
+
 };
+
+
 
 export default NavControl;
