@@ -71,9 +71,10 @@ pre {
   padding: 10px;
   border-radius: 5px;
   overflow-x: auto;
-  border: 1px solid #ddd; 
+  border: 1px solid #ddd;
   margin: 10px 0;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 code {
@@ -103,4 +104,17 @@ iframe {
   border: 1px solid #ddd; 
   padding: 10px;
   margin: 10px 0;
+}
+
+.slide-content {
+  overflow-wrap: break-word;
+  word-break: break-word; /* For breaking long unbroken strings of text */
+}
+
+/* Ensuring slide container has a consistent width */
+.slide {
+  width: 100%; /* Use 100% of its parent container width */
+  max-width: 800px; /* Example fixed max-width for larger screens */
+  margin: auto; /* Center the slide */
+  overflow: hidden; /* Hide overflow */
 }

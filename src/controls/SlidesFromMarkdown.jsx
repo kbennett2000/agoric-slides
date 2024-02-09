@@ -23,6 +23,7 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
     axios
       .get(markdownUrl)
       .then((response) => {
+        setCurrentSlide(0);
         // Replace relative links in the fetched Markdown content with the absolute baseUrl.
         const updatedContent = response.data.replace(/]\(\.\//g, `](${baseUrl}`);
         // Split the updated content into sections based on "##" to separate slides.
@@ -154,6 +155,11 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
     return null;
   }
 
+  // Before rendering the component, check if slides[currentSlide] is defined
+  if (!slides.length || typeof slides[currentSlide] === 'undefined') {
+    return <div>Loading slides...</div>;
+  }
+
   // Render the component UI.
   return (
     <div className="container mx-auto px-4">
@@ -176,6 +182,7 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
       )}
     </div>
   );
+
 };
 
 // Export the component for use in other parts of the application.
