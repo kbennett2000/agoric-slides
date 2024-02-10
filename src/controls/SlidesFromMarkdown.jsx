@@ -4,6 +4,7 @@ import { marked } from "marked";
 import DOMPurify from "dompurify";
 import parse from "html-react-parser";
 
+//const SlidesFromMarkdown = ({ markdownUrl, onSlideEnd, onSlideBegin, goToLastSlide, prevSectionTitle, nextSectionTitle }) => {
 const SlidesFromMarkdown = ({ markdownUrl }) => {
   const [slides, setSlides] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -13,7 +14,6 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
   const baseUrl = trimUrlToBase(markdownUrl);
 
   useEffect(() => {
-    console.log("SlidesFromMarkdown markdownUrl - " + markdownUrl);
     marked.setOptions({
       renderer: new marked.Renderer(), // Specifies a custom renderer.
       gfm: true, // Enables GitHub Flavored Markdown.
@@ -32,7 +32,8 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
         const updatedContent = response.data.replace(/]\(\.\//g, `](${baseUrl}`);
         // Split the updated content into sections based on "##" to separate slides.
         const sections = updatedContent
-          .split(/(?<=\n)## (?!#)/)
+          //.split(/(?<=\n)## (?!#)/)
+          .split(/## (?!#)/)
           .map((section) => section.trim())
           .filter((section) => section);
         // Attempt to match and extract the headline from the section.
@@ -101,6 +102,12 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
             };
           })
         );
+
+        /*
+        if (goToLastSlide) {
+          changeSlide(sections.length - 1);
+        }
+        */
       })
       .catch((error) => console.error(error)); // Log any errors that occur during fetching or processing.
   }, [markdownUrl, baseUrl]); // Re-run this effect if markdownUrl or baseUrl props change.
@@ -117,16 +124,23 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
     }, 200); // This duration should match the CSS transition duration
   };
 
-  // Advance to the next slide by incrementing the currentSlide index.
   const goToNextSlide = () => {
-    // setCurrentSlide((current) => (current + 1) % slides.length);
-    changeSlide((current) => (current + 1) % slides.length);
+    if (currentSlide === slides.length - 1) {
+      // Call the onSlideEnd callback from props
+      // onSlideEnd();
+    } else {
+      changeSlide((current) => (current + 1) % slides.length);
+    }
   };
 
   // Go back to the previous slide by decrementing the currentSlide index.
   const goToPreviousSlide = () => {
-    // setCurrentSlide((current) => (current - 1 + slides.length) % slides.length);
-    changeSlide((current) => (current - 1 + slides.length) % slides.length);
+    if (currentSlide === 0) {
+      // Call the onSlideBegin callback from props
+      // onSlideBegin();
+    } else {
+      changeSlide((current) => (current - 1 + slides.length) % slides.length);
+    }
   };
 
   // Remove everything after the last '/' in a supplied URL
@@ -211,24 +225,27 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
         <div className={`slide ${fade ? "opacity-100" : "opacity-0"} transition-opacity duration-200`}>
           <h1 className="slide-headline text-3xl font-bold mb-2">{slides[currentSlide].headline}</h1>
           {slides[currentSlide].title && <h2 className="slide-title text-2xl font-semibold mb-4">{slides[currentSlide].title}</h2>}
-          <div className="slide-content mb-6 overflow-auto" style={{ height: "50vh", width: "75vw", maxHeight: "600px", minHeight: "600px" }}>
-            {parse(slides[currentSlide].content)}
+          <div className="slide-content mb-6 overflow-auto" >
+            <div style={{ height: "50vh", width: "45vw", maxHeight: "600px", minHeight: "600px" }}>{parse(slides[currentSlide].content)}</div>
           </div>
           <div className="slide-controls flex justify-between">
-            <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out ${currentSlide === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`} onClick={goToPreviousSlide} disabled={currentSlide === 0}>
+            <button className={`bg-blue-500 text-white font-bold py-2 px-4 rounded shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out ${currentSlide === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"} disabled={currentSlide === 0}`} onClick={goToPreviousSlide}>
               {prevTitle ? (
                 <div className="flex flex-col items-start">
                   <span>Previous:</span>
                   <span>{prevTitle}</span>
                 </div>
               ) : (
-                "Previous"
+                <div>
+                  <span>Previous</span>
+                  <span>{/*prevSectionTitle*/}</span>
+                </div>
               )}
             </button>
+
             <button
-              className={`bg-blue-500 text-white font-bold py-2 px-4 rounded shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out ${currentSlide === slides.length - 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`}
+              className={`bg-blue-500 text-white font-bold py-2 px-4 rounded shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out ${currentSlide === slides.length - 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"} disabled={currentSlide === slides.length - 1} `}
               onClick={goToNextSlide}
-              disabled={currentSlide === slides.length - 1}
             >
               {nextTitle ? (
                 <div className="flex flex-col items-start">
@@ -236,7 +253,10 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
                   <span>{nextTitle}</span>
                 </div>
               ) : (
-                "Next"
+                <div>
+                  <span>Next</span>
+                  <span>{/*nextSectionTitle*/}</span>
+                </div>
               )}
             </button>
           </div>
@@ -246,8 +266,6 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
       )}
     </div>
   );
-
-  
 };
 
 // Export the component for use in other parts of the application.
