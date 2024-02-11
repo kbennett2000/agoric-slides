@@ -4,7 +4,7 @@ import { marked } from "marked";
 import DOMPurify from "dompurify";
 import parse from "html-react-parser";
 
-//const SlidesFromMarkdown = ({ markdownUrl, onSlideEnd, onSlideBegin, goToLastSlide, prevSectionTitle, nextSectionTitle }) => {
+
 const SlidesFromMarkdown = ({ markdownUrl }) => {
   const [slides, setSlides] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -103,11 +103,6 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
           })
         );
 
-        /*
-        if (goToLastSlide) {
-          changeSlide(sections.length - 1);
-        }
-        */
       })
       .catch((error) => console.error(error)); // Log any errors that occur during fetching or processing.
   }, [markdownUrl, baseUrl]); // Re-run this effect if markdownUrl or baseUrl props change.
@@ -126,8 +121,6 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
 
   const goToNextSlide = () => {
     if (currentSlide === slides.length - 1) {
-      // Call the onSlideEnd callback from props
-      // onSlideEnd();
     } else {
       changeSlide((current) => (current + 1) % slides.length);
     }
@@ -136,8 +129,6 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
   // Go back to the previous slide by decrementing the currentSlide index.
   const goToPreviousSlide = () => {
     if (currentSlide === 0) {
-      // Call the onSlideBegin callback from props
-      // onSlideBegin();
     } else {
       changeSlide((current) => (current - 1 + slides.length) % slides.length);
     }
@@ -238,7 +229,6 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
               ) : (
                 <div>
                   <span>Previous</span>
-                  <span>{/*prevSectionTitle*/}</span>
                 </div>
               )}
             </button>
@@ -255,7 +245,6 @@ const SlidesFromMarkdown = ({ markdownUrl }) => {
               ) : (
                 <div>
                   <span>Next</span>
-                  <span>{/*nextSectionTitle*/}</span>
                 </div>
               )}
             </button>

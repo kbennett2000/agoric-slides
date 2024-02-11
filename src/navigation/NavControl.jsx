@@ -35,16 +35,11 @@ const {
   Page_Lesson_16,
 } = config;
 
-// let goToLastSlide = false;
-
 const NavControl = () => {
   const [sideNavContent, setSideNavContent] = useState(["Introduction to Agoric", "What's New in Agoric"]);
   const [markdownUrl, setMarkdownUrl] = useState(Page_Introduction_to_Agoric);
   const [sideNavSelectedItem, setSideNavSelectedItem] = useState("Introduction to Agoric");
   const [activeSelection, setActiveSelection] = useState("Home");
-  //const [prevSectionTitle, setPrevSectionTitle] = useState('');
-  //const [nextSectionTitle, setNextSectionTitle] = useState('');
-
 
   const handleTopNavSelection = (selection) => {
     setActiveSelection(selection);
@@ -104,15 +99,6 @@ const NavControl = () => {
   };
 
   const handleItemClick = (item) => {
-
-    /*
-    const currentItemIndex = sideNavContent.indexOf(item);
-    setPrevSectionTitle(sideNavContent[currentItemIndex - 1]);
-    console.log("prevSectionTitle" - sideNavContent[currentItemIndex - 1]);
-    setNextSectionTitle(sideNavContent[currentItemIndex + 1]);
-    console.log("nextSectionTitle" - sideNavContent[currentItemIndex + 1]);
-    */
-
     switch (item) {
       case "Introduction to Agoric":
         setMarkdownUrl(Page_Introduction_to_Agoric);
@@ -265,29 +251,6 @@ const NavControl = () => {
     }
   };
 
-  /*
-  const handleSlideBegin = () => {
-    const currentIndex = sideNavContent.indexOf(sideNavSelectedItem);
-    const prevItem = sideNavContent[currentIndex - 1] || sideNavContent[currentIndex];
-    if (currentIndex - 1) {
-      goToLastSlide = false;      
-    } else {
-      goToLastSlide = true;      
-    }
-    handleItemClick(prevItem);
-  };
-
-  const handleSlideEnd = () => {
-    // Find the index of the current item
-    const currentIndex = sideNavContent.indexOf(sideNavSelectedItem);
-    // Determine the next item
-    const nextItem = sideNavContent[currentIndex + 1] || sideNavContent[currentIndex];
-    goToLastSlide = false;
-    // Update the selected item and markdown URL
-    handleItemClick(nextItem);
-  };
-  */
- 
   return (
     <div className="flex flex-col h-screen">
       <NavBar onSelectionChange={handleTopNavSelection} activeSelection={activeSelection} />
