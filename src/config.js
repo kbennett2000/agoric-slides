@@ -1,12 +1,14 @@
 const baseUrl = 'https://raw.githubusercontent.com/Agoric/documentation/agoric-slide-control/main/guides/';
 
 const config = {
-    Page_Introduction_to_Agoric: baseUrl + "getting-started/intro-to-agoric.md",
+    Page_Introduction: baseUrl + "getting-started/intro-to-agoric.md",
+    Page_Beginner: baseUrl + "getting-started/beginner.md",
+    Page_Advanced: baseUrl + "getting-started/advanced.md",
     Page_Whats_New_in_Agoric: baseUrl + "getting-started/whats-new-in-agoric.md",
     Page_Tutorial_1: baseUrl + "getting-started/README.md",
     Page_Tutorial_2: baseUrl + "getting-started/tutorial-dapp-agoric-basics.md",
     Page_Tutorial_3: baseUrl + "getting-started/tutorial-dapp-orchestration.md",
-    Page_What_is_Zoe: baseUrl + "zoe/README.md",
+    Page_How_What_is_Zoe: baseUrl + "zoe/README.md",
     Page_ERTP: baseUrl + "ertp/README.md",
     Page_Agoric_CLI: baseUrl + "agoric-cli/README.md",
     Page_How_to_Build_a_Client_UI: baseUrl + "getting-started/how-to-build-client-UI.md",
@@ -30,6 +32,9 @@ const config = {
     Page_Lesson_14: baseUrl + "getting-started/lesson14.md",
     Page_Lesson_15: baseUrl + "getting-started/lesson15.md",
     Page_Lesson_16: baseUrl + "getting-started/lesson16.md", 
+    Page_Discord: "https://www.discord.com",
+    Page_Office_Hours: "https://agoric.com/office-hours/",
+    Page_X: "https://x.com/agoric",
   };
     
   export default config;

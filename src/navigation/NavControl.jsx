@@ -4,7 +4,9 @@ import SideBar from "./SideBar";
 import SlidesFromMarkdown from "../controls/SlidesFromMarkdown";
 import config from "../config";
 const {
-  Page_Introduction_to_Agoric,
+  Page_Introduction,
+  Page_Beginner,
+  Page_Advanced,
   Page_Whats_New_in_Agoric,
   Page_Tutorial_1,
   Page_Tutorial_2,
@@ -33,21 +35,24 @@ const {
   Page_Lesson_14,
   Page_Lesson_15,
   Page_Lesson_16,
+  Page_Discord,
+  Page_Office_Hours,
+  Page_X,
 } = config;
 
 const NavControl = () => {
-  const [sideNavContent, setSideNavContent] = useState(["Introduction to Agoric", "What's New in Agoric"]);
-  const [markdownUrl, setMarkdownUrl] = useState(Page_Introduction_to_Agoric);
-  const [sideNavSelectedItem, setSideNavSelectedItem] = useState("Introduction to Agoric");
-  const [activeSelection, setActiveSelection] = useState("Home");
+  const [sideNavContent, setSideNavContent] = useState(["Introduction", "Beginner", "Advanced"]);
+  const [markdownUrl, setMarkdownUrl] = useState(Page_Introduction);
+  const [sideNavSelectedItem, setSideNavSelectedItem] = useState("Introduction");
+  const [activeSelection, setActiveSelection] = useState("Learn");
 
   const handleTopNavSelection = (selection) => {
     setActiveSelection(selection);
     switch (selection) {
-      case "Home":
-        setMarkdownUrl(Page_Introduction_to_Agoric);
-        setSideNavContent(["Introduction to Agoric", "What's New in Agoric"]);
-        setSideNavSelectedItem("Introduction to Agoric");
+      case "Learn":
+        setMarkdownUrl(Page_Introduction);
+        setSideNavContent(["Introduction", "Beginner", "Advanced"]);
+        setSideNavSelectedItem("Introduction");
         break;
 
       case "Tutorial 1: Dapp-Offer-Up":
@@ -66,10 +71,10 @@ const NavControl = () => {
         setSideNavSelectedItem("Dapp Orchestration Tutorial");
         break;
 
-      case "Core Concepts":
-        setMarkdownUrl(Page_What_is_Zoe);
-        setSideNavContent(["What is Zoe?", "ERTP", "Agoric CLI", "How to Build a Client UI", "Permissioned Deployments", "Testing", "Debugging"]);
-        setSideNavSelectedItem("What is Zoe?");
+      case "Build":
+        setMarkdownUrl(Page_How_to_Build_a_Client_UI);
+        setSideNavContent(["How to Build a Client UI", "ERTP", "Permissioned Deployments", "Testing", "Debugging", "Agoric CLI", "API Reference"]);
+        setSideNavSelectedItem("How to Build a Client UI");
         break;
 
       case "Resources":
@@ -78,21 +83,28 @@ const NavControl = () => {
         setSideNavSelectedItem("API Reference");
         break;
 
-      case "API Reference":
-        setMarkdownUrl(Page_API_Reference);
-        setSideNavContent(["API Reference"]);
-        setSideNavSelectedItem("API Reference");
+      case "Office Hours":
+        window.open(Page_Office_Hours, '_blank');
         break;
 
-      case "Community & Support":
+      case "Discord":
+        window.open(Page_Discord, '_blank');
+        break;
+
+      case "X":
+        window.open(Page_X, '_blank');
+        break;
+      
+
+      case "Support":
         setMarkdownUrl("");
-        setSideNavContent(["Discord", "Office Hours", "X", "Github Discussions"]);
-        setSideNavSelectedItem("Discord");
+        setSideNavContent([""]);
+        setSideNavSelectedItem("");
         break;
 
       default:
-        setMarkdownUrl(Page_Introduction_to_Agoric);
-        setSideNavContent(["Introduction to Agoric", "What's New in Agoric"]);
+        setMarkdownUrl(Page_Introduction);
+        setSideNavContent(["Introduction", "Beginner", "Advanced"]);
         setSideNavSelectedItem("Introduction to Agoric");
         break;
     }
@@ -100,10 +112,19 @@ const NavControl = () => {
 
   const handleItemClick = (item) => {
     switch (item) {
-      case "Introduction to Agoric":
-        setMarkdownUrl(Page_Introduction_to_Agoric);
-        setSideNavSelectedItem("Introduction to Agoric");
+      case "Introduction":
+        setMarkdownUrl(Page_Introduction);
+        setSideNavSelectedItem("Introduction");
         break;
+      case "Beginner":
+        setMarkdownUrl(Page_Beginner);
+        setSideNavSelectedItem("Beginner");
+        break;
+      case "Advanced":
+        setMarkdownUrl(Page_Advanced);
+        setSideNavSelectedItem("Advanced");
+        break;      
+
       case "What's New in Agoric":
         setMarkdownUrl(Page_Whats_New_in_Agoric);
         setSideNavSelectedItem("What's New in Agoric");

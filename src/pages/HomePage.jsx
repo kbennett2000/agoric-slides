@@ -2,15 +2,7 @@ import React, { useState } from "react";
 import "../App.css";
 import NavControl from "../navigation/NavControl";
 
-const TestPage = () => {
-  const [activeTab, setActiveTab] = useState(1);
-
-  const handleTabClick = (tabNumber) => {
-    setActiveTab(tabNumber);
-  };
-
-
-
+const HomePage = () => {
   return (
     <div className="mx-auto mt-8">
       <div className="mb-4 flex justify-left items-center">
@@ -19,10 +11,6 @@ const TestPage = () => {
     </div>
   );
 
-
-
-
-
 };
 
-export default TestPage;
+export default HomePage;
